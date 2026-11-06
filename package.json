@@ -8,5 +8,13 @@
   "engines": {
     "node": ">=24.9.0"
   },
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm -r --parallel --filter @scorehub/backend --filter @scorehub/frontend dev",
+    "dev:backend": "pnpm --filter @scorehub/backend dev",
+    "dev:frontend": "pnpm --filter @scorehub/frontend dev",
+    "build": "pnpm -r --filter @scorehub/backend --filter @scorehub/frontend build",
+    "lint": "pnpm -r --filter @scorehub/backend --filter @scorehub/frontend lint",
+    "typecheck": "pnpm -r --filter @scorehub/backend --filter @scorehub/frontend typecheck"
+  }
 }
