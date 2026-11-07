@@ -15,6 +15,8 @@
     "dev:frontend": "pnpm --filter @scorehub/frontend dev",
     "build": "pnpm -r --filter @scorehub/backend --filter @scorehub/frontend build",
     "lint": "pnpm -r --filter @scorehub/backend --filter @scorehub/frontend lint",
-    "typecheck": "pnpm -r --filter @scorehub/backend --filter @scorehub/frontend typecheck"
+    "typecheck": "pnpm -r --filter @scorehub/backend --filter @scorehub/frontend typecheck",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down"
   }
 }
