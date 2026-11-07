@@ -1,0 +1,43 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+model Student {
+  id                  Int            @id @default(autoincrement())
+  createdAt           DateTime       @default(now()) @map("created_at")
+  updatedAt           DateTime       @updatedAt @map("updated_at")
+  registrationNumber  String         @unique @map("registration_number")
+  foreignLanguageCode String?        @map("foreign_language_code")
+  score               StudentScore[]
+
+  @@map("students")
+}
+
+model Subject {
+  id     Int            @id @default(autoincrement())
+  code   String         @unique
+  name   String
+  scores StudentScore[]
+
+  @@map("subjects")
+}
+
+model StudentScore {
+  studentId Int     @map("student_id")
+  subjectId Int     @map("subject_id")
+  score     Decimal @db.Decimal(4, 2)
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  subject Subject @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+
+  @@id([studentId, subjectId])
+  @@index([subjectId, score])
+  @@map("student_scores")
+}
