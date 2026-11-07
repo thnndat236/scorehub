@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 
 type SubjectStatisticRow = {
@@ -43,6 +43,22 @@ type ScoreDistributionResponse = {
     }>
 };
 
+type HistogramRow = {
+    bin: number;
+    count: number;
+};
+
+type HistogramResponse = {
+    subjectCode: string;
+    subjectName: string;
+    totalStudents: number;
+    bins: Array<{
+        label: string;
+        lowerBound: number;
+        upperBound: number;
+        count: number;
+    }>;
+};
 
 @Injectable()
 export class ReportsService {
@@ -101,6 +117,57 @@ export class ReportsService {
                 average: row.average,
                 poor: row.poor
             }))
+        };
+    }
+
+    async getHistogram(subjectCode: string): Promise<HistogramResponse> {
+        const subject = await this.prismaService.subject.findUnique({
+            where: { code: subjectCode },
+            select: { id: true, code: true, name: true }
+        });
+
+        if (subject === null) {
+            throw new NotFoundException(`Subject ${subjectCode} not found`);
+        }
+        
+        const rows = await this.prismaService.$queryRaw<HistogramRow[]>`
+            WITH bins AS (
+                SELECT generate_series(0, 19) AS bin
+            )
+            SELECT
+                b.bin::int AS bin,
+                COUNT(sc.student_id)::int AS count
+            FROM bins b
+            LEFT JOIN student_scores sc
+            ON sc.subject_id = ${subject.id}
+            AND sc.score >= b.bin * 0.5
+            AND (
+                sc.score < (b.bin + 1) * 0.5
+                OR (b.bin = 19 AND sc.score <= 10)
+            )
+            GROUP BY b.bin
+            ORDER BY b.bin
+        `;
+
+        const bins = rows.map((row) => {
+            const lowerBound = row.bin * 0.5;
+            const upperBound = (row.bin + 1) * 0.5;
+
+            return {
+                label: row.bin === 19
+                    ? "9.5-10"
+                    : `${lowerBound}-<${upperBound}`,
+                lowerBound,
+                upperBound,
+                count: row.count
+            }
+        });
+
+        return {
+            subjectCode: subject.code,
+            subjectName: subject.name,
+            totalStudents: bins.reduce((sum, bin) => sum + bin.count, 0),
+            bins
         };
     }
 }

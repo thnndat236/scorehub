@@ -1,5 +1,6 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, Query } from "@nestjs/common";
 import { ReportsService } from "./reports.service";
+import { HistogramQueryDto } from "./dto/histogram-query.dto";
 
 @Controller("reports")
 export class ReportsController {
@@ -13,5 +14,10 @@ export class ReportsController {
     @Get("score-distribution")
     getScoreDistribution() {
         return this.reportsService.getScoreDistribution();
+    }
+
+    @Get("histogram")
+    getHistogram(@Query() query: HistogramQueryDto) {
+        return this.reportsService.getHistogram(query.subjectCode);
     }
 }
