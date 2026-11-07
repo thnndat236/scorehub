@@ -9,4 +9,9 @@ export class ReportsController {
     getSubjectStatistic() {
         return this.reportsService.getSubjectStatistic();
     }
+
+    @Get("score-distribution")
+    getScoreDistribution() {
+        return this.reportsService.getScoreDistribution();
+    }
 }

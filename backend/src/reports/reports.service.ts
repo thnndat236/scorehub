@@ -8,7 +8,7 @@ type SubjectStatisticRow = {
     average_score: number | null;
     highest_score: number | null;
     lowest_score: number | null;
-}
+};
 
 type SubjectStatisticResponse = {
     data: Array<{
@@ -19,6 +19,28 @@ type SubjectStatisticResponse = {
         highestScore: number | null;
         lowestScore: number | null;
     }>;
+};
+
+type ScoreDistributionRow = {
+    code: string;
+    name: string;
+    total_students: number;
+    excellent: number;
+    good: number;
+    average: number;
+    poor: number;
+};
+
+type ScoreDistributionResponse = {
+    data: Array<{
+        subjectCode: string;
+        subjectName: string;
+        totalStudents: number;
+        excellent: number;
+        good: number;
+        average: number;
+        poor: number;
+    }>
 };
 
 
@@ -49,6 +71,35 @@ export class ReportsService {
                 averageScore: round(row.average_score, 4),
                 highestScore: row.highest_score,
                 lowestScore: row.lowest_score
+            }))
+        };
+    }
+
+    async getScoreDistribution(): Promise<ScoreDistributionResponse> {
+        const rows = await this.prismaService.$queryRaw<ScoreDistributionRow[]>`
+            SELECT
+                s.code,
+                s.name,
+                COUNT(sc.student_id)::int AS total_students,
+                COUNT(sc.student_id) FILTER (WHERE sc.score >= 8)::int AS excellent,
+                COUNT(sc.student_id) FILTER (WHERE sc.score >= 6 AND sc.score < 8)::int AS good,
+                COUNT(sc.student_id) FILTER (WHERE sc.score >= 4 AND sc.score < 6)::int AS average,
+                COUNT(sc.student_id) FILTER (WHERE sc.score < 4)::int AS poor
+            FROM subjects s
+            LEFT JOIN student_scores sc ON s.id = sc.subject_id
+            GROUP BY s.id, s.code, s.name
+            ORDER BY s.id
+        `
+
+        return {
+            data: rows.map((row) => ({
+                subjectCode: row.code,
+                subjectName: row.name,
+                totalStudents: row.total_students,
+                excellent: row.excellent,
+                good: row.good,
+                average: row.average,
+                poor: row.poor
             }))
         };
     }
