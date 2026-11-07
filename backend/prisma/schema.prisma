@@ -14,7 +14,7 @@ model Student {
   updatedAt           DateTime       @updatedAt @map("updated_at")
   registrationNumber  String         @unique @map("registration_number")
   foreignLanguageCode String?        @map("foreign_language_code")
-  score               StudentScore[]
+  scores              StudentScore[]
 
   @@map("students")
 }

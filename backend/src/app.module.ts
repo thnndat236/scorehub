@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { HealthModule } from './health/health.module';
+import { StudentModule } from './student/student.module';
 
 @Module({
   imports: [ConfigModule.forRoot({ 
@@ -11,7 +12,8 @@ import { HealthModule } from './health/health.module';
     envFilePath: ['.env.local', '.env'],
     }),
     PrismaModule,
-    HealthModule
+    HealthModule,
+    StudentModule
   ],
   controllers: [AppController],
   providers: [AppService],
