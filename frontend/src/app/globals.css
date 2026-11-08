@@ -1,1 +1,88 @@
 @import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-border: var(--border);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-level-excellent: var(--level-excellent);
+  --color-level-good: var(--level-good);
+  --color-level-average: var(--level-average);
+  --color-level-poor: var(--level-poor);
+  --color-chart-grid: var(--chart-grid);
+  --color-chart-axis: var(--chart-axis);
+  --color-chart-tooltip-bg: var(--chart-tooltip-bg);
+  --color-chart-tooltip-border: var(--chart-tooltip-border);
+}
+
+:root {
+  color-scheme: light;
+
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --surface-muted: #f1f5f9;
+  --border: #e2e8f0;
+  --foreground: #0f172a;
+  --muted-foreground: #64748b;
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+  --accent-soft: #eef2ff;
+  --accent-foreground: #ffffff;
+  --level-excellent: #10b981;
+  --level-good: #3b82f6;
+  --level-average: #f59e0b;
+  --level-poor: #f43f5e;
+  --chart-grid: #e2e8f0;
+  --chart-axis: #64748b;
+  --chart-tooltip-bg: #ffffff;
+  --chart-tooltip-border: #e2e8f0;
+}
+
+.dark {
+  color-scheme: dark;
+
+  --background: #020617;
+  --surface: #0f172a;
+  --surface-muted: #1e293b;
+  --border: #1e293b;
+  --foreground: #f1f5f9;
+  --muted-foreground: #94a3b8;
+  --accent: #6366f1;
+  --accent-hover: #818cf8;
+  --accent-soft: rgba(99, 102, 241, 0.15);
+  --accent-foreground: #ffffff;
+  --level-excellent: #34d399;
+  --level-good: #60a5fa;
+  --level-average: #fbbf24;
+  --level-poor: #fb7185;
+  --chart-grid: #1e293b;
+  --chart-axis: #94a3b8;
+  --chart-tooltip-bg: #0f172a;
+  --chart-tooltip-border: #334155;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
+  ::selection {
+    background-color: var(--accent-soft);
+    color: var(--foreground);
+  }
+}
