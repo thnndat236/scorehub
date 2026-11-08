@@ -6,6 +6,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { HealthModule } from './health/health.module';
 import { StudentModule } from './student/student.module';
 import { ReportsModule } from './reports/reports.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [ConfigModule.forRoot({ 
@@ -15,7 +16,8 @@ import { ReportsModule } from './reports/reports.module';
     PrismaModule,
     HealthModule,
     StudentModule,
-    ReportsModule
+    ReportsModule,
+    DashboardModule
   ],
   controllers: [AppController],
   providers: [AppService],
