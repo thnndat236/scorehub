@@ -3,15 +3,15 @@ import { PrismaClient } from "../src/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 
 const subjects = [
-    { code: "TOAN", name: "Toán" },
-    { code: "NGU_VAN", name: "Ngữ văn" },
-    { code: 'NGOAI_NGU', name: 'Ngoại ngữ' },
-    { code: 'VAT_LI', name: 'Vật lý' },
-    { code: 'HOA_HOC', name: 'Hóa học' },
-    { code: 'SINH_HOC', name: 'Sinh học' },
-    { code: 'LICH_SU', name: 'Lịch sử' },
-    { code: 'DIA_LI', name: 'Địa lý' },
-    { code: 'GDCD', name: 'Giáo dục công dân' }
+    { code: "TOAN", name: "Mathematics" },
+    { code: "NGU_VAN", name: "Literature" },
+    { code: 'NGOAI_NGU', name: 'Foreign Language' },
+    { code: 'VAT_LI', name: 'Physics' },
+    { code: 'HOA_HOC', name: 'Chemistry' },
+    { code: 'SINH_HOC', name: 'Biology' },
+    { code: 'LICH_SU', name: 'History' },
+    { code: 'DIA_LI', name: 'Geography' },
+    { code: 'GDCD', name: 'Civic Education' }
 ];
 
 async function main(): Promise<void> {
