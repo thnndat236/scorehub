@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PagePlaceholder } from "@/components/ui/PagePlaceholder";
+import { PageIntro } from "@/components/ui/PageIntro";
 
 export const metadata: Metadata = {
   title: "Reports",
@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 
 export default function ReportsPage() {
   return (
-    <PagePlaceholder
+    <PageIntro
       title="Reports"
       description="Score distribution by subject, the 20-bin histogram, and detailed subject statistics."
     />

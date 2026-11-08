@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PagePlaceholder } from "@/components/ui/PagePlaceholder";
+import { PageIntro } from "@/components/ui/PageIntro";
 
 export const metadata: Metadata = {
   title: "Settings",
@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 
 export default function SettingsPage() {
   return (
-    <PagePlaceholder
+    <PageIntro
       title="Settings"
       description="Application preferences."
     />
