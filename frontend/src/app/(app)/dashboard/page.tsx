@@ -1,10 +1,19 @@
 import type { Metadata } from "next";
-import { Card } from "@/components/ui/Card";
+import { GroupALeaderboard } from "@/components/dashboard/GroupALeaderboard";
+import { OverviewCards } from "@/components/dashboard/OverviewCards";
+import { StudentAverageDistribution } from "@/components/dashboard/StudentAverageDistribution";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { ApiError } from "@/lib/api/client";
-import { getOverview } from "@/lib/api/endpoints";
-import type { OverviewResponse } from "@/lib/api/types";
-import { formatCount, formatPercentage, formatScore } from "@/lib/format";
+import {
+  getOverview,
+  getStudentAverageDistribution,
+  getTopGroupA
+} from "@/lib/api/endpoints";
+import type {
+  OverviewResponse,
+  StudentAverageDistributionResponse,
+  TopGroupAResponse
+} from "@/lib/api/types";
 
 export const dynamic = "force-dynamic";
 
@@ -12,13 +21,25 @@ export const metadata: Metadata = {
   title: "Dashboard",
 };
 
-type OverviewResult =
-  | { ok: true; overview: OverviewResponse }
+type DashboardData = {
+  overview: OverviewResponse;
+  distribution: StudentAverageDistributionResponse;
+  leaderboard: TopGroupAResponse;
+};
+
+type DashboardResult =
+  | { ok: true; data: DashboardData }
   | { ok: false; message: string };
 
-async function loadOverview(): Promise<OverviewResult> {
+async function loadDashboard(): Promise<DashboardResult> {
   try {
-    return { ok: true, overview: await getOverview() };
+    const [overview, distribution, leaderboard] = await Promise.all([
+      getOverview(),
+      getStudentAverageDistribution(),
+      getTopGroupA()
+    ]);
+
+    return { ok: true, data: { overview, distribution, leaderboard } };
   } catch (error) {
     if (error instanceof ApiError) {
       return { ok: false, message: error.message };
@@ -29,19 +50,18 @@ async function loadOverview(): Promise<OverviewResult> {
 }
 
 export default async function DashboardPage() {
-  const result = await loadOverview();
+  const result = await loadDashboard();
 
   if (!result.ok) {
     return (
       <ErrorState
-        title="Unable to load the overview"
+        title="Unable to load the dashboard"
         message={result.message}
       />
     );
   }
 
-  const { overview } = result;
-  const rate = overview.studentsWithAverageAtLeast8Rate * 100;
+  const { overview, distribution, leaderboard } = result.data;
 
   return (
     <div className="space-y-6">
@@ -52,37 +72,17 @@ export default async function DashboardPage() {
         </p>
       </div>
 
-      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Card title="Total Students">
-          <p className="text-2xl font-semibold tracking-tight text-slate-900">
-            {formatCount(overview.totalStudents)}
-          </p>
-        </Card>
+      <OverviewCards overview={overview} />
 
-        <Card title="Total Subjects">
-          <p className="text-2xl font-semibold tracking-tight text-slate-900">
-            {formatCount(overview.totalSubjects)}
-          </p>
-        </Card>
+      <div className="grid gap-6 xl:grid-cols-3">
+        <div className="xl:col-span-1">
+          <StudentAverageDistribution distribution={distribution} />
+        </div>
 
-        <Card title="Overall Average Score">
-          <p className="text-2xl font-semibold tracking-tight text-slate-900">
-            {formatScore(overview.overallAverageScore)}
-          </p>
-          <p className="mt-1 text-xs text-slate-500">
-            Across {formatCount(overview.validScoreRecords)} score records
-          </p>
-        </Card>
-
-        <Card title="Students with Average ≥ 8">
-          <p className="text-2xl font-semibold tracking-tight text-slate-900">
-            {formatCount(overview.studentsWithAverageAtLeast8)}
-          </p>
-          <p className="mt-1 text-xs text-slate-500">
-            {formatPercentage(rate)} of all students
-          </p>
-        </Card>
-      </section>
+        <div className="xl:col-span-2">
+          <GroupALeaderboard leaderboard={leaderboard} />
+        </div>
+      </div>
     </div>
   );
 }
