@@ -83,7 +83,7 @@ export class DashboardService {
             overallAverageScore: roundNullable(row.overall_average_score, 4),
             studentsWithAverageAtLeast8: row.students_with_average_at_least_8,
             studentsWithAverageAtLeast8Rate: round(
-                row.total_subjects === 0 ?
+                row.total_students === 0 ?
                 0 : row.students_with_average_at_least_8 / row.total_students, 4
             )
         };
