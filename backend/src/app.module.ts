@@ -7,6 +7,7 @@ import { HealthModule } from './health/health.module';
 import { StudentModule } from './student/student.module';
 import { ReportsModule } from './reports/reports.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { SubjectsModule } from './subjects/subjects.module';
 
 @Module({
   imports: [ConfigModule.forRoot({ 
@@ -17,7 +18,8 @@ import { DashboardModule } from './dashboard/dashboard.module';
     HealthModule,
     StudentModule,
     ReportsModule,
-    DashboardModule
+    DashboardModule,
+    SubjectsModule
   ],
   controllers: [AppController],
   providers: [AppService],
