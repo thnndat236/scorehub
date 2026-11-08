@@ -14,4 +14,9 @@ export class DashboardController {
     getStudentAverageDistribution() {
         return this.dashboardService.getStudentAverageDistribution();
     }
+
+    @Get("top-group-a")
+    getTopGroupA() {
+        return this.dashboardService.getTopGroupA();
+    }
 }

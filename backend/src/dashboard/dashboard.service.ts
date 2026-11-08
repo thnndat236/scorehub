@@ -35,6 +35,25 @@ type AverageDistributionResponse = {
     }>;
 };
 
+type TopGroupARow = {
+    registration_number: string;
+    math: number;
+    physics: number;
+    chemistry: number;
+    total: number;
+};
+
+type TopGroupAResponse = {
+    data: Array<{
+        rank: number;
+        registrationNumber: string;
+        math: number;
+        physics: number;
+        chemistry: number;
+        total: number;
+    }>;      
+};
+
 @Injectable()
 export class DashboardService {
     constructor(private readonly prismaService: PrismaService) {}
@@ -115,6 +134,38 @@ export class DashboardService {
             ]
         };
     }
+
+    async getTopGroupA(): Promise<TopGroupAResponse> {
+        const rows = await this.prismaService.$queryRaw<TopGroupARow[]>`
+            SELECT
+                st.registration_number,
+                MAX(sc.score) FILTER (WHERE su.code = 'TOAN')::float8 AS math,
+                MAX(sc.score) FILTER (WHERE su.code = 'VAT_LI')::float8 AS physics,
+                MAX(sc.score) FILTER (WHERE su.code = 'HOA_HOC')::float8 AS chemistry,
+                SUM(sc.score)::float8 AS total
+            FROM students st
+            JOIN student_scores sc ON st.id = sc.student_id
+            JOIN subjects su ON su.id = sc.subject_id
+            WHERE su.code IN ('TOAN', 'VAT_LI', 'HOA_HOC')
+            GROUP BY st.id, st.registration_number
+            HAVING COUNT(DISTINCT su.code) = 3
+            ORDER BY total DESC, math DESC, physics DESC, chemistry DESC,
+                    st.registration_number ASC
+            LIMIT 10
+        `;
+
+        return {
+            data: rows.map((row, index) => ({
+                rank: index + 1,
+                registrationNumber: row.registration_number,
+                math: row.math,
+                physics: row.physics,
+                chemistry: row.chemistry,
+                total: round(row.total, 2)
+            }))
+        };
+    }
+
 }
 
 function round(value: number, digits: number): number {
