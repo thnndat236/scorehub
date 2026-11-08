@@ -4,6 +4,7 @@ import { parse } from "csv-parse";
 import { PrismaClient } from "../src/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { createReadStream } from "node:fs";
+import { ScoreValue } from "../src/common/domain/score-value";
 
 const CSV_PATH = path.join(__dirname, "..", "dataset", "diem_thi_thpt_2024.csv");
 
@@ -41,7 +42,7 @@ type ParsedStudent = {
     scores: Array<{ code: string; score: number }>;
 };
 
-type ScoreResult = { kind: "blank" } | { kind: "invalid" } | { kind: "ok"; value: number };
+type ScoreResult = { kind: "blank" } | { kind: "invalid" } | { kind: "ok"; score: ScoreValue };
 
 type Summary = {
     rowsRead: number;
@@ -58,12 +59,14 @@ function parseScore(raw: string | undefined): ScoreResult {
         return { kind: "blank" };
     }
 
-    const score = Number(value);
-    if (!Number.isFinite(score) || score < 0 || score > 10) {
-        return { kind: "invalid" };
+    try {
+        return { kind: "ok", score: ScoreValue.fromNumber(Number(value)) };
+    } catch (error) {
+        if (error instanceof RangeError) {
+            return { kind: "invalid" };
+        }
+        throw error;
     }
-
-    return { kind: "ok", value: score };
 }
 
 function validateHeader(record: Record<string, string>): void {
@@ -106,7 +109,7 @@ function parseRow(
             continue;
         }
 
-        scores.push({ code, score: result.value });
+        scores.push({ code, score: result.score.value });
     }
 
     return { registrationNumber, foreignLanguageCode, scores };
