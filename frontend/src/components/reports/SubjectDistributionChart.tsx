@@ -232,9 +232,9 @@ export function SubjectDistributionChart({
         ))}
       </ul>
 
-      <div className="mt-3 h-[240px] w-full shrink-0 xl:h-auto xl:min-h-0 xl:flex-1">
+      <div className="mt-3 h-60 w-full shrink-0 xl:h-auto xl:min-h-0 xl:flex-1">
         <div className="h-full w-full overflow-x-auto">
-          <div className="h-full min-w-[600px]">
+          <div className="h-full min-w-150">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={chartData}

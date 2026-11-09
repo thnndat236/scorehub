@@ -128,7 +128,6 @@ function HistogramFallback({
   return (
     <Card
       title="Score Histogram"
-      description="20 intervals of 0.5 points. The final interval includes 10."
       actions={
         <SubjectSelect
           subjects={subjects}
@@ -141,7 +140,7 @@ function HistogramFallback({
       <div
         role="status"
         aria-live="polite"
-        className="flex min-h-[220px] flex-1 flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-border bg-surface-muted/40 text-sm text-muted-foreground"
+        className="flex min-h-55 flex-1 flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-border bg-surface-muted/40 text-sm text-muted-foreground"
       >
         <span
           aria-hidden="true"

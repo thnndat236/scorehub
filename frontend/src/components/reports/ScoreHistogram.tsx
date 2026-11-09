@@ -109,9 +109,9 @@ export function ScoreHistogram({
           <EmptyState message="No histogram data is available for this subject." />
         </div>
       ) : (
-        <div className="mt-1 h-[220px] w-full shrink-0 xl:h-auto xl:min-h-0 xl:flex-1">
+        <div className="mt-1 h-55 w-full shrink-0 xl:h-auto xl:min-h-0 xl:flex-1">
           <div className="h-full w-full overflow-x-auto">
-            <div className="h-full min-w-[560px] xl:min-w-0">
+            <div className="h-full min-w-140 xl:min-w-0">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={chartData}
