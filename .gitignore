@@ -31,3 +31,6 @@ backend/src/generated/
 # Next.js generated files
 next-env.d.ts
 .vercel/
+# Local database backups
+backups/
+.neon
