@@ -124,15 +124,6 @@ export default async function SearchScoresPage(
   return (
     <div className="app-page flex flex-col gap-3">
       <div className="shrink-0">
-        <h2 className="text-lg font-semibold tracking-tight text-foreground">
-          Search Scores
-        </h2>
-        <p className="mt-0.5 text-sm text-muted-foreground">
-          Look up a student by their 8-digit registration number.
-        </p>
-      </div>
-
-      <div className="shrink-0">
         <SearchForm
           key={registrationNumber}
           initialValue={registrationNumber}

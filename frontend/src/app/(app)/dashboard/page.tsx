@@ -66,15 +66,6 @@ export default async function DashboardPage() {
   return (
     <div className="app-page flex flex-col gap-4 sm:gap-5">
       <div className="shrink-0">
-        <h2 className="text-lg font-semibold tracking-tight text-foreground">
-          Overview
-        </h2>
-        <p className="mt-0.5 text-sm text-muted-foreground">
-          Aggregated from the full examination dataset.
-        </p>
-      </div>
-
-      <div className="shrink-0">
         <OverviewCards overview={overview} />
       </div>
 

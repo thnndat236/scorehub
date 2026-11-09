@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { PageIntro } from "@/components/ui/PageIntro";
 
 export const metadata: Metadata = {
   title: "Settings",
@@ -7,9 +6,12 @@ export const metadata: Metadata = {
 
 export default function SettingsPage() {
   return (
-    <PageIntro
-      title="Settings"
-      description="Application preferences."
-    />
+    <div className="app-page flex flex-col gap-4 sm:gap-5">
+      <div className="shrink-0">
+        <p className="text-sm text-muted-foreground">
+          Application preferences.
+        </p>
+      </div>
+    </div>
   );
 }
