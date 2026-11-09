@@ -74,7 +74,7 @@ function SidebarNavigation({
 
 function SidebarFooter() {
   return (
-    <div className="border-t border-border p-4 text-xs text-muted-foreground">
+    <div className="border-t border-border p-3 text-xs text-muted-foreground">
       High School Graduation Exam Analytics
     </div>
   );

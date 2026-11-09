@@ -64,22 +64,26 @@ export default async function DashboardPage() {
   const { overview, distribution, leaderboard } = result.data;
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-semibold text-slate-900">Overview</h2>
-        <p className="mt-1 text-sm text-slate-600">
+    <div className="app-page flex flex-col gap-4 sm:gap-5">
+      <div className="shrink-0">
+        <h2 className="text-lg font-semibold tracking-tight text-foreground">
+          Overview
+        </h2>
+        <p className="mt-0.5 text-sm text-muted-foreground">
           Aggregated from the full examination dataset.
         </p>
       </div>
 
-      <OverviewCards overview={overview} />
+      <div className="shrink-0">
+        <OverviewCards overview={overview} />
+      </div>
 
-      <div className="grid gap-6 xl:grid-cols-3">
-        <div className="xl:col-span-1">
+      <div className="grid min-w-0 gap-4 sm:gap-5 xl:min-h-0 xl:flex-1 xl:grid-cols-12 xl:grid-rows-1">
+        <div className="flex min-h-0 min-w-0 xl:col-span-7">
           <StudentAverageDistribution distribution={distribution} />
         </div>
 
-        <div className="xl:col-span-2">
+        <div className="flex min-h-0 min-w-0 xl:col-span-5">
           <GroupALeaderboard leaderboard={leaderboard} />
         </div>
       </div>
