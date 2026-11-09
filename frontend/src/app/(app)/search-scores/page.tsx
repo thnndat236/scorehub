@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { SearchForm } from "@/components/search-scores/SearchForm";
 import { StudentScoreTable } from "@/components/search-scores/StudentScoreTable";
 import { StudentSummary } from "@/components/search-scores/StudentSummary";
+import { Card } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { ApiError } from "@/lib/api/client";
@@ -39,7 +40,23 @@ async function loadStudent(registrationNumber: string): Promise<StudentResult> {
   }
 }
 
-export default async function SearchScoresPage(props: PageProps<"/search-scores">) {
+function ResultPanel({ children }: { children: ReactNode }) {
+  return (
+    <Card
+      title="Detailed Scores"
+      className="flex h-full w-full flex-col"
+      contentClassName="flex min-h-0 flex-1 flex-col justify-center p-6"
+    >
+      <div className="mx-auto w-full max-w-2xl">
+        {children}
+      </div>
+    </Card>
+  );
+}
+
+export default async function SearchScoresPage(
+  props: PageProps<"/search-scores">
+) {
   const params = await props.searchParams;
   const raw = params.registrationNumber;
   const value = Array.isArray(raw) ? raw[0] : raw;
@@ -52,62 +69,77 @@ export default async function SearchScoresPage(props: PageProps<"/search-scores"
 
   if (!hasQuery) {
     content = (
-      <EmptyState
-        title="Start a search"
-        message="Enter an 8-digit registration number above to view a student's scores."
-      />
+      <ResultPanel>
+        <EmptyState
+          title="Start a search"
+          message="Enter an 8-digit registration number above to view a student's scores."
+        />
+      </ResultPanel>
     );
   } else if (!isValid) {
     content = (
-      <EmptyState
-        title="Invalid registration number"
-        message="Registration numbers must contain exactly 8 digits."
-      />
+      <ResultPanel>
+        <EmptyState
+          title="Invalid registration number"
+          message="Registration numbers must contain exactly 8 digits."
+        />
+      </ResultPanel>
     );
   } else {
     const result = await loadStudent(registrationNumber);
 
     if (result.status === "not-found") {
       content = (
-        <EmptyState
-          title="Student not found"
-          message={`No student exists with registration number ${registrationNumber}.`}
-        />
+        <ResultPanel>
+          <EmptyState
+            title="Student not found"
+            message={`No student exists with registration number ${registrationNumber}.`}
+          />
+        </ResultPanel>
       );
     } else if (result.status === "error") {
       content = (
-        <ErrorState
-          title="Unable to load student scores"
-          message={result.message}
-        />
+        <ResultPanel>
+          <ErrorState
+            title="Unable to load student scores"
+            message={result.message}
+          />
+        </ResultPanel>
       );
     } else {
       content = (
-        <div className="space-y-6">
-          <StudentSummary student={result.student} />
-          <StudentScoreTable student={result.student} />
+        <div className="flex min-h-0 flex-1 flex-col gap-3">
+          <div className="shrink-0">
+            <StudentSummary student={result.student} />
+          </div>
+
+          <div className="flex min-h-0 flex-1">
+            <StudentScoreTable student={result.student} />
+          </div>
         </div>
       );
     }
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-semibold text-slate-900">
+    <div className="app-page flex flex-col gap-3">
+      <div className="shrink-0">
+        <h2 className="text-lg font-semibold tracking-tight text-foreground">
           Search Scores
         </h2>
-        <p className="mt-1 text-sm text-slate-600">
+        <p className="mt-0.5 text-sm text-muted-foreground">
           Look up a student by their 8-digit registration number.
         </p>
       </div>
 
-      <SearchForm
-        key={registrationNumber}
-        initialValue={registrationNumber}
-      />
+      <div className="shrink-0">
+        <SearchForm
+          key={registrationNumber}
+          initialValue={registrationNumber}
+        />
+      </div>
 
-      {content}
+      <div className="flex min-h-0 flex-1 flex-col">{content}</div>
     </div>
   );
 }
