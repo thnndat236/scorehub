@@ -2,6 +2,12 @@
 
 A score analytics platform for the high school graduation exam.
 
+## Live demo and source code
+
+- **Application:** https://scorehub-three.vercel.app
+- **Source repository:** https://github.com/thnndat236/scorehub
+- **API health:** https://scorehub-socz.onrender.com/api/v1/health
+
 ## Features
 
 - Dashboard with overview metrics, average distribution, and Group A leaderboard
@@ -60,9 +66,12 @@ pnpm dev:frontend # http://localhost:3000
 
 ## Data import
 
-The optional CSV import expects `backend/dataset/diem_thi_thpt_2024.csv`:
+The CSV import reads `backend/dataset/diem_thi_thpt_2024.csv`. The source CSV is included in this repository. If you need to add it manually, create the `backend/dataset` folder if it does not exist, then place the file there with the exact name `diem_thi_thpt_2024.csv`.
+
+Seed the subject records first, then run the importer from the repository root:
 
 ```
+pnpm --filter @scorehub/backend exec prisma db seed
 pnpm --filter @scorehub/backend db:import
 ```
 
